@@ -1,5 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
+  <PropertyGroup>
+    <Version>1.0.0-alpha1</Version>
+    <PackageId>AspNet.DependencyInjection.Batch</PackageId>
+    <Authors>Fahmi Akbar Wildana</Authors>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>AspNet.DependencyInjection.Batch</AssemblyName>
+    <RootNamespace>AspNet.DependencyInjection.Batch</RootNamespace>
+    <Company />
+    <Product>Batch Dependency Injection for ASP.NET Core</Product>
+    <Description>This library is used to simplify multiple Dependency Injection.</Description>
+    <PackageProjectUrl>https://github.com/DrSensor/BatchDependencyInjection</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DrSensor/BatchDependencyInjection.git</RepositoryUrl>
+    <PackageTags>ASP.NET;ASP.NETCore;Dependency Injection</PackageTags>
+    <Copyright>Fahmi Akbar Wildana</Copyright>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="BatchDI.cs" />
+    <Compile Include="BatchDIExtension.cs" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+  </ItemGroup>
 </Project>

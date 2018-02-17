@@ -1,57 +1,62 @@
-﻿namespace BatchDI.AspNetCore
+﻿using System;
+using System.Linq;
+using System.Reflection;
+
+namespace AspNet.DependencyInjection.Batch
 {
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using System.Collections.Generic;
-    using Microsoft.Extensions.DependencyInjection;
-
-    /**@Usage
-    service.BatchInject(
-        filter: "*Service",
-        blacklist: new[] { "NoSingletonService", "AnotherService" },
-        injector: _class => service.AddSingleton<_implementation>()
-    );
-    service.BatchInject(
-        filter: new[] { "*Service", "*Controllers" },
-        injector: _class => service.AddSingleton<_implementation>()
-        blacklist: new[] { "NoSingletonService", "AnotherService" },
-    );
-    service.BatchInject(
-        injector: (_interface, _class) => service.AddSingleton<_interface, _class>()
-        filter: "*Service",
-        blacklist: new[] { "NoSingletonService", "AnotherService" },
-    );
-     */
-
-    public static class BatchDI
+    public static partial class BatchDependencyInjectionExtensions
     {
-        private static void BatchInjector(Delegate injectionFunc, string filter, string[] blacklist = null)
+        private static bool hasInterface(string filter)
         {
-            Func<Type, bool> filterClassName;
-            if (filter.StartsWith("*"))
-                filterClassName = t => t.Name.EndsWith(filter.Replace("*", ""));
-            else if (filter.EndsWith("*"))
-                filterClassName = t => t.Name.StartsWith(filter.Replace("*", ""));
-            else
-                filterClassName = t => t.Name.Contains(filter.Split('*')[0]) || t.Name.Contains(filter.Split('*')[1]);
+            return (!filter.StartsWith("*") && !filter.EndsWith("*")) ||
+                    (filter.StartsWith("*") && filter.EndsWith("*"));
+        }
 
-            var types = Assembly.GetExecutingAssembly()
+        private static void inject(dynamic caller, dynamic filter, dynamic blacklist)
+        {
+            if (filter is string) BatchInjector(caller, filter, blacklist);
+            else if (filter is string[]) foreach (var f in filter) BatchInjector(caller, f, blacklist);
+            else throw new System.ArgumentException($"{nameof(filter)} must be `string` or `string[]`");
+        }
+
+        private static void BatchInjector(Delegate injector, string filter, dynamic blacklist = null)
+        {
+            /** @Check filter and blacklist string
+            create helper for checking if its array, string glob patter, or just string */
+            bool notInBlacklist(string className)
+            {
+                if (blacklist is string[])
+                {
+                    Func<string, bool> check = el => el == className;
+                    return Array.Exists(blacklist, check);
+                }
+                else if (blacklist is string)
+                {
+                    if (blacklist.Contains("*")) return className.Contains(blacklist.Replace("*", ""));
+                    else return blacklist == className;
+                }
+                else if (blacklist == null) { return true; }
+                else throw new System.ArgumentException($"{nameof(blacklist)} must be `string` or `string[]`");
+            }
+            Func<string, bool> filterClassName;
+            if (filter.StartsWith("*")) filterClassName = t => t.EndsWith(filter.Replace("*", ""));
+            else if (filter.EndsWith("*")) filterClassName = t => t.StartsWith(filter.Replace("*", ""));
+            else filterClassName = t =>
+            {
+                if (filter.Contains("*")) return t.Contains(filter.Split('*')[0]) || t.Contains(filter.Split('*')[1]);
+                else return t == filter;
+            };
+            /** @ENDCheck filter and blacklist string */
+
+            // Filter based on namespace and rule above
+            var types = Assembly.GetEntryAssembly()
                     .GetTypes()
-                    .Where(t =>
-                    {
-                        try
-                        {
-                            // @see https://stackoverflow.com/a/18485574/5221998
-                            return t.Namespace.StartsWith(Assembly.GetCallingAssembly().EntryPoint.DeclaringType.Namespace) && filterClassName(t);
-                        }
-                        catch (System.NullReferenceException)
-                        {
-                            return false;
-                        }
-                    });
+                    .Where(t => t.Namespace.StartsWith(Assembly.GetEntryAssembly().EntryPoint.DeclaringType.Namespace ?? "") &&
+                                filterClassName(t.Name) && notInBlacklist(t.Name)
+            );
 
-            if (!filter.StartsWith("*") || !filter.EndsWith("*"))
+            /** @Implementation */
+            if (hasInterface(filter))
             {
                 var grouptypes = from t in types
                                  group t by t.Name.Replace(filter.Split('*')[1], "").Replace(filter.Split('*')[0], "") into tGroup
@@ -61,32 +66,19 @@
                 foreach (var group in grouptypes)
                 {
                     Type _interface = group.Where(x => x.IsInterface).First();
-                    Type _implementation = group.Where(x => _interface.IsAssignableFrom(x)).First();
+                    Type _implementation = group.Where(x => !x.IsInterface && _interface.IsAssignableFrom(x)).First();
                     // _services.AddSingleton(_interface, _implementation);
-                    injectionFunc.DynamicInvoke(_interface, _implementation);
+                    Console.WriteLine($"{_interface.Name}, {_implementation.Name}");
+                    injector.DynamicInvoke(_interface, _implementation);
                 }
             }
-            else foreach (var implementation in types) injectionFunc.DynamicInvoke(implementation);
-        }
-
-        public static void BatchInject(this IServiceCollection services, Action<Type, Type> injector, string filter, string[] blacklist = null)
-        {
-            BatchInjector(injector, filter, blacklist);
-        }
-
-        public static void BatchInject(this IServiceCollection services, Action<Type> injector, string filter, string[] blacklist = null)
-        {
-            BatchInjector(injector, filter, blacklist);
-        }
-
-        public static void BatchInject(this IServiceCollection services, Action<Type, Type> injector, string[] filter, string[] blacklist = null)
-        {
-            foreach (var f in filter) BatchInjector(injector, f, blacklist);
-        }
-
-        public static void BatchInject(this IServiceCollection services, Action<Type> injector, string[] filter, string[] blacklist = null)
-        {
-            foreach (var f in filter) BatchInjector(injector, f, blacklist);
+            else
+                foreach (var implementation in types)
+                {
+                    Console.WriteLine($"{implementation.Name}");
+                    if (!implementation.IsInterface) injector.DynamicInvoke(implementation);
+                }
+            /** @ENDImplementation */
         }
     }
 }
