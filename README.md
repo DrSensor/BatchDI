@@ -12,7 +12,7 @@ dotnet add package AspNet.DependencyInjection.Batch
 
 ```xml
   <ItemGroup>
-    <PackageReference Include="AspNet.DependencyInjection.Batch" Version="1.0.0-alpha1" />
+    <PackageReference Include="AspNet.DependencyInjection.Batch" Version="1.0.0-alpha*" />
   </ItemGroup>
 ```
 

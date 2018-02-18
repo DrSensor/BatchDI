@@ -1,0 +1,36 @@
+version: 1.0.0-alpha{build}
+
+# NOTE .NET Core SDK is already installed in the build worker image Visual Studio 2017
+# so the `install` section is not required
+
+image: Visual Studio 2017
+
+configuration: Release
+
+init:
+  # Good practise, because Windows line endings are different from Unix/Linux ones
+  - cmd: git config --global core.autocrlf true
+
+artifacts:
+  - path: '**\*.nupkg'
+    name: Library
+    type: NuGetPackage
+
+# package_version: $(appveyor_build_version)
+
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+
+before_build:
+  - cmd: dotnet --info
+  - cmd: dotnet restore --verbosity m
+build_script:
+  - cmd: dotnet pack
+
+test: off

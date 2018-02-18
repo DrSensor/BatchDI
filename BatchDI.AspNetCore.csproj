@@ -4,7 +4,6 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>1.0.0-alpha1</Version>
     <PackageId>AspNet.DependencyInjection.Batch</PackageId>
     <Authors>Fahmi Akbar Wildana</Authors>
   </PropertyGroup>
@@ -22,7 +21,7 @@
   <ItemGroup>
     <Compile Include="BatchDI.cs" />
     <Compile Include="BatchDIExtension.cs" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="[2.0,]" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="*" />
   </ItemGroup>
 </Project>
