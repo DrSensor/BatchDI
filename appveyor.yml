@@ -33,4 +33,7 @@ before_build:
 build_script:
   - cmd: dotnet pack
 
-test: off
+test_script:
+  - cmd: cd Example
+  - cmd: dotnet restore --verbosity m
+  - cmd: dotnet run -- 5

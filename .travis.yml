@@ -1,0 +1,27 @@
+language: csharp
+
+matrix:
+  include:
+    - os: linux
+      mono: none
+      addons:
+        apt:
+          packages:
+            - libunwind8
+    - os: osx
+      mono: none
+
+env:
+  - CLI_VERSION=Latest
+
+## If `dotnet` configuration doesnt work, use install script instead
+install:
+  - export DOTNET_INSTALL_DIR="$PWD/.dotnetsdk"
+  - curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel Current --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
+  - export PATH="$DOTNET_INSTALL_DIR:$PATH"
+
+script:
+  - dotnet --info
+  - cd Example
+  - dotnet restore
+  - dotnet run -- 5

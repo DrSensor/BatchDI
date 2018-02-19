@@ -12,9 +12,17 @@ namespace Example
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            int timeout = 0;
+            bool timoutdefined = args.Length != 0 ? int.TryParse(args[0], out timeout) : false;
+            if (timoutdefined) args = args.Skip(1).ToArray();
+
+            var task = Task.Factory.StartNew(() => BuildWebHost(args).Run());
+            while (!timoutdefined) { }
+
+            task.Wait(timeout * 1000);
+            return 0;
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
