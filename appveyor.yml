@@ -1,4 +1,4 @@
-version: 1.0.0-alpha{build}
+version: 1.0.{build}
 
 # NOTE .NET Core SDK is already installed in the build worker image Visual Studio 2017
 # so the `install` section is not required

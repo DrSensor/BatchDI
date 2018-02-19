@@ -9,11 +9,20 @@ This package/library use for doing multiple dependency injection in easy way. Fo
 
 ## Installation
 
+- .NET CLI
+
 ```bash
 dotnet add package AspNet.DependencyInjection.Batch
 ```
 
+- Package Manager
+
+```powershell
+PM> Install-Package AspNet.DependencyInjection.Batch -Version 1.0.0-alpha34
+```
 ## Usage
+
+In `*.csproj`
 
 ```xml
   <ItemGroup>
@@ -21,11 +30,18 @@ dotnet add package AspNet.DependencyInjection.Batch
   </ItemGroup>
 ```
 
+Then in In `Startup.cs` import
+
 ```csharp
 using AspNet.DependencyInjection.Batch;
 ```
 
+In general, this library has 2 way of usage:
+
 ### Base Usage
+
+This method use when you want to do custom Dependency Injection.
+
 In `Startup.cs`
 
 ```csharp
@@ -50,6 +66,8 @@ public void ConfigureServices(IServiceCollection services)
 ```
 
 ### Using Helper Method
+
+This method have same functionality as [ASP.NET Dependency Injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection) but without doing repetitive typing.
 
 ```csharp
     service.BatchSingleton("*Service", new[] {"MorningService", "NightService"});
