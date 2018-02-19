@@ -4,6 +4,7 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup>
+    <Version />
     <PackageId>AspNet.DependencyInjection.Batch</PackageId>
     <Authors>Fahmi Akbar Wildana</Authors>
   </PropertyGroup>
