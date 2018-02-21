@@ -51,8 +51,18 @@ namespace AspNet.DependencyInjection.Batch
             // Filter based on namespace and rule above
             var types = Assembly.GetEntryAssembly()
                     .GetTypes()
-                    .Where(t => t.Namespace.StartsWith(Assembly.GetEntryAssembly().EntryPoint.DeclaringType.Namespace ?? "") &&
-                                filterClassName(t.Name) && notInBlacklist(t.Name)
+                    .Where(t =>
+                    {
+                        try
+                        {
+                            return t.Namespace.StartsWith(Assembly.GetEntryAssembly().EntryPoint.DeclaringType.Namespace ?? "") &&
+                                    filterClassName(t.Name) && notInBlacklist(t.Name);
+                        }
+                        catch (System.NullReferenceException)
+                        {
+                            return false;
+                        }
+                    }
             );
 
             /** @Implementation */
@@ -68,14 +78,12 @@ namespace AspNet.DependencyInjection.Batch
                     Type _interface = group.Where(x => x.IsInterface).First();
                     Type _implementation = group.Where(x => !x.IsInterface && _interface.IsAssignableFrom(x)).First();
                     // _services.AddSingleton(_interface, _implementation);
-                    Console.WriteLine($"{_interface.Name}, {_implementation.Name}");
                     injector.DynamicInvoke(_interface, _implementation);
                 }
             }
             else
                 foreach (var implementation in types)
                 {
-                    Console.WriteLine($"{implementation.Name}");
                     if (!implementation.IsInterface) injector.DynamicInvoke(implementation);
                 }
             /** @ENDImplementation */
