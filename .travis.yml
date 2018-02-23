@@ -22,6 +22,6 @@ install:
 
 script:
   - dotnet --info
-  - cd Example
+  - cd Example/AspNetCore
   - dotnet restore
-  - dotnet run -- 5
+  - dotnet run --shutdown 5

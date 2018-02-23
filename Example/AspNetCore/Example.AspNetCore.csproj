@@ -9,9 +9,8 @@
     <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.*" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="McMaster.Extensions.CommandlineUtils" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.*" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BatchDI.AspNetCore.csproj" />
+    <ProjectReference Include="../../Framework/AspNetCore/BatchDI.AspNetCore.csproj" />
   </ItemGroup>
 </Project>

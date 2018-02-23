@@ -4,21 +4,14 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace AspNet.DependencyInjection.Batch
+namespace BatchDI
 {
-    public static partial class BatchDependencyInjectionExtensions
+    public partial class BatchDI
     {
-        private static bool hasInterface(string filter)
+        public static bool filterHasInterface(string filter)
         {
             return (!filter.StartsWith("*") && !filter.EndsWith("*")) ||
                     (filter.StartsWith("*") && filter.EndsWith("*"));
-        }
-
-        private static void inject(dynamic caller, dynamic filter, dynamic blacklist, bool parallel)
-        {
-            if (filter is string) BatchInjector(caller, filter, blacklist, parallel);
-            else if (filter is string[]) foreach (var f in filter) BatchInjector(caller, f, blacklist, parallel);
-            else throw new System.ArgumentException($"{nameof(filter)} must be `string` or `string[]`");
         }
 
         private static void BatchInjector(Delegate injector, string filter, dynamic blacklist, bool parallel)
@@ -29,7 +22,7 @@ namespace AspNet.DependencyInjection.Batch
                         select t;
 
             /** @Implementation */
-            if (hasInterface(filter))
+            if (filterHasInterface(filter))
             {
                 var grouptypes = from t in types
                                  group t by t.Name.Replace(filter.Split('*')[1], "").Replace(filter.Split('*')[0], "") into tGroup

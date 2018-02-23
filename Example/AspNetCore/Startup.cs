@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-using AspNet.DependencyInjection.Batch;
+using BatchDI.AspNetCore;
 
 namespace Example
 {
