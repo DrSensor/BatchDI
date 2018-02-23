@@ -148,20 +148,5 @@ This method have same functionality as [ASP.NET Dependency Injection](https://do
 
 ---
 
-## TODO/Need-Help
-
-* [ ] Implement array of glob pattern in blacklist. Example
-
-```csharp
-    service.BatchSingleton(
-        filter: new[] { "I*Service", "*Type", },
-        blacklist: new[] { "*NotNeeded*", "*SQL*" }
-    );
-```
-
-* For pattern to get `(_interface, _implementation)`:
-    * [ ] Replace pattern `I*S` with `I|S` or `I.S` so it doesn't confuse with `*QL*`.
-    * [ ] The pattern can also be declared as `*ter|*ervice`.
-
 ## License
 MIT

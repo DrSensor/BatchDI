@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace AspNet.DependencyInjection.Batch
 {
@@ -12,17 +14,48 @@ namespace AspNet.DependencyInjection.Batch
                     (filter.StartsWith("*") && filter.EndsWith("*"));
         }
 
-        private static void inject(dynamic caller, dynamic filter, dynamic blacklist)
+        private static void inject(dynamic caller, dynamic filter, dynamic blacklist, bool parallel)
         {
-            if (filter is string) BatchInjector(caller, filter, blacklist);
-            else if (filter is string[]) foreach (var f in filter) BatchInjector(caller, f, blacklist);
+            if (filter is string) BatchInjector(caller, filter, blacklist, parallel);
+            else if (filter is string[]) foreach (var f in filter) BatchInjector(caller, f, blacklist, parallel);
             else throw new System.ArgumentException($"{nameof(filter)} must be `string` or `string[]`");
         }
 
-        private static void BatchInjector(Delegate injector, string filter, dynamic blacklist = null)
+        private static void BatchInjector(Delegate injector, string filter, dynamic blacklist, bool parallel)
         {
-            /** @Check filter and blacklist string
-            create helper for checking if its array, string glob patter, or just string */
+            // Filter based on namespace and provided pattern
+            var types = from t in Assembly.GetEntryAssembly().GetTypes()
+                        where containMainNamespace(t.Namespace) && filterMatch(t.Name) && notInBlacklist(t.Name)
+                        select t;
+
+            /** @Implementation */
+            if (hasInterface(filter))
+            {
+                var grouptypes = from t in types
+                                 group t by t.Name.Replace(filter.Split('*')[1], "").Replace(filter.Split('*')[0], "") into tGroup
+                                 where tGroup.Count() == 2
+                                 select tGroup;
+
+                void invoke(IGrouping<string, Type> group)
+                {
+                    Type _interface = group.Where(x => x.IsInterface).First();
+                    Type _implementation = group.Where(x => !x.IsInterface && _interface.IsAssignableFrom(x)).First();
+                    // _services.AddSingleton(_interface, _implementation);
+                    injector.DynamicInvoke(_interface, _implementation);
+                }
+
+                if (parallel) Parallel.ForEach(grouptypes, g => invoke(g));
+                else foreach (var g in grouptypes) invoke(g);
+            }
+            else
+            {
+                void invoke(Type implementation) { if (!implementation.IsInterface) injector.DynamicInvoke(implementation); }
+                if (parallel) Parallel.ForEach(types, t => invoke(t));
+                else foreach (var t in types) invoke(t);
+            }
+            /** @ENDImplementation */
+
+            /** @Helper */
             bool notInBlacklist(string className)
             {
                 if (blacklist is string[])
@@ -38,55 +71,30 @@ namespace AspNet.DependencyInjection.Batch
                 else if (blacklist == null) { return true; }
                 else throw new System.ArgumentException($"{nameof(blacklist)} must be `string` or `string[]`");
             }
-            Func<string, bool> filterClassName;
-            if (filter.StartsWith("*")) filterClassName = t => t.EndsWith(filter.Replace("*", ""));
-            else if (filter.EndsWith("*")) filterClassName = t => t.StartsWith(filter.Replace("*", ""));
-            else filterClassName = t =>
+
+            bool filterMatch(string className)
             {
-                if (filter.Contains("*")) return t.Contains(filter.Split('*')[0]) || t.Contains(filter.Split('*')[1]);
-                else return t == filter;
-            };
-            /** @ENDCheck filter and blacklist string */
-
-            // Filter based on namespace and rule above
-            var types = Assembly.GetEntryAssembly()
-                    .GetTypes()
-                    .Where(t =>
-                    {
-                        try
-                        {
-                            return t.Namespace.StartsWith(Assembly.GetEntryAssembly().EntryPoint.DeclaringType.Namespace ?? "") &&
-                                    filterClassName(t.Name) && notInBlacklist(t.Name);
-                        }
-                        catch (System.NullReferenceException)
-                        {
-                            return false;
-                        }
-                    }
-            );
-
-            /** @Implementation */
-            if (hasInterface(filter))
-            {
-                var grouptypes = from t in types
-                                 group t by t.Name.Replace(filter.Split('*')[1], "").Replace(filter.Split('*')[0], "") into tGroup
-                                 where tGroup.Count() == 2
-                                 select tGroup.ToArray();
-
-                foreach (var group in grouptypes)
+                if (filter.StartsWith("*")) return className.EndsWith(filter.Replace("*", ""));
+                else if (filter.EndsWith("*")) return className.StartsWith(filter.Replace("*", ""));
+                else
                 {
-                    Type _interface = group.Where(x => x.IsInterface).First();
-                    Type _implementation = group.Where(x => !x.IsInterface && _interface.IsAssignableFrom(x)).First();
-                    // _services.AddSingleton(_interface, _implementation);
-                    injector.DynamicInvoke(_interface, _implementation);
+                    if (filter.Contains("*")) return className.Contains(filter.Split('*')[0]) || className.Contains(filter.Split('*')[1]);
+                    else return className == filter;
                 }
             }
-            else
-                foreach (var implementation in types)
+
+            bool containMainNamespace(string _namespace)
+            {
+                try
                 {
-                    if (!implementation.IsInterface) injector.DynamicInvoke(implementation);
+                    return _namespace.StartsWith(Assembly.GetEntryAssembly().EntryPoint.DeclaringType.Namespace ?? "");
                 }
-            /** @ENDImplementation */
+                catch (System.NullReferenceException)
+                {
+                    return false;
+                }
+            }
+            /** @ENDHelper */
         }
     }
 }
