@@ -1,4 +1,4 @@
-version: 1.0.{build}
+version: 1.1.{build}
 
 # NOTE .NET Core SDK is already installed in the build worker image Visual Studio 2017
 # so the `install` section is not required
@@ -33,11 +33,12 @@ before_build:
   - cmd: dotnet restore --verbosity m
 build_script:
   - cmd: dotnet pack
+  - cmd: cd Framework\AspNetCore && dotnet pack && cd ..\..\
 
 test_script:
-  - cmd: cd Example
+  - cmd: cd Example\AspNetCore
   - cmd: dotnet restore --verbosity m
-  - cmd: dotnet run -- 5
+  - cmd: dotnet run --shutdown 5
 
 deploy:
   - provider: NuGet

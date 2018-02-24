@@ -63,7 +63,7 @@ So then I can write it like this
 
 ```bash
 dotnet add package BatchDI
-# if using ASP.NET Core
+# Just only install this if using ASP.NET Core
 dotnet add package BatchDI.AspNetCore
 ```
 
@@ -71,7 +71,6 @@ dotnet add package BatchDI.AspNetCore
 
 ```powershell
 PM> Install-Package BatchDI
-# if using ASP.NET Core
 PM> Install-Package BatchDI.AspNetCore
 ```
 
@@ -89,6 +88,85 @@ In `nuget.config` before installing
 ```
 
 </details>
+
+## Usage
+
+> See [Example folder](./Example) for more complete example usage.
+
+In `*.csproj`
+
+```xml
+  <ItemGroup>
+    <PackageReference Include="BatchDI" Version="1.1.0" />
+    <!-- Just only add this if using ASP.NET Core -->
+    <PackageReference Include="BatchDI.AspNetCore" Version="1.1.0" />
+  </ItemGroup>
+```
+
+Then to import
+
+```csharp
+using BatchDI;
+using BatchDI.AspNetCore;
+```
+
+In general, this library has 2 way of usage:
+
+### Base Usage
+
+<details>
+<summary>Use this method if you want to do custom Dependency Injection.</summary>
+
+```c#
+using BatchDI;
+.
+.
+BatchDI.BatchInject(
+    filter: "*Service",
+    injector: _implementation =>
+    {
+        if (_implementation.Name.Contains("My"))
+        {
+            service.AddSingleton(_class, new MyBaseService(Configuration["MyConfig"])));
+        }
+    }
+);
+
+// or
+
+BatchDI.BatchInject(
+    filter: "I*Service",
+    injector: (_interface, _class) => service.AddSingleton(_interface, _class),
+);
+```
+
+</details>
+
+### Using Helper Method
+
+#### ASP․NET Core
+
+This method have same functionality as [ASP.NET Dependency Injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection) but without doing repetitive typing.
+
+* In `Startup.cs`
+
+```c#
+using Microsoft.Extensions.DependencyInjection;
+using BatchDI.AspNetCore;
+.
+.
+public void ConfigureServices(IServiceCollection services)
+{
+    service.BatchSingleton("*Service", new[] {"BlacklistOneService", "BlacklistTwoService"});
+    service.BatchTransient("*Type", "BlacklistOneType");
+    service.BatchScoped("*Query");
+
+    // For custom dependency injection
+    service.BatchInject(lambdaFunction, "*Service", new[] {"BlacklistOneService", "BlacklistTwoService"});
+}
+```
+
+---
 
 ## API Reference
 
@@ -122,77 +200,14 @@ This library extend `IServiceCollection` usage by adding additional method for b
 
 ---
 
-## Usage
+## Support
 
-In `*.csproj`
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for contributing directly via:
 
-```xml
-  <ItemGroup>
-    <PackageReference Include="BatchDI" Version="1.0.0" />
-    <PackageReference Include="BatchDI.AspNetCore" Version="1.0.0" />
-  </ItemGroup>
-```
-
-Then to import
-
-```csharp
-using BatchDI;
-using BatchDI.AspNetCore;
-```
-
-In general, this library has 2 way of usage:
-
-### Base Usage
-
-This method use when you want to do custom Dependency Injection.
-
-```c#
-using BatchDI;
-.
-.
-BatchDI.BatchInject(
-    filter: "*Service",
-    injector: _implementation =>
-    {
-        if (_implementation.Name.Contains("My"))
-        {
-            service.AddSingleton(_class, new MyBaseService(Configuration["MyConfig"])));
-        }
-    }
-);
-
-// or
-
-BatchDI.BatchInject(
-    filter: "I*Service",
-    injector: (_interface, _class) => service.AddSingleton(_interface, _class),
-);
-```
-
-### Using Helper Method
-
-This method have same functionality as [ASP.NET Dependency Injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection) but without doing repetitive typing.
-
-* In `Startup.cs`
-
-```c#
-using Microsoft.Extensions.DependencyInjection;
-using BatchDI.AspNetCore;
-.
-.
-public void ConfigureServices(IServiceCollection services)
-{
-    service.BatchSingleton("*Service", new[] {"BlacklistOneService", "BlacklistTwoService"});
-    service.BatchTransient("*Type", "BlacklistOneType");
-    service.BatchScoped("*Query");
-
-    // For custom dependency injection
-    service.BatchInject(lambdaFunction, "*Service", new[] {"BlacklistOneService", "BlacklistTwoService"});
-}
-```
-
----
+* [Create Issues](./CONTRIBUTING.md/#create-issues)
+* [Pull Requests](./CONTRIBUTING.md/#pull-requests) or
+* [Info about the project structure](./CONTRIBUTING.md/#project-structure)
 
 ## License
 
-MIT
+[MIT](./LICENSE) License
