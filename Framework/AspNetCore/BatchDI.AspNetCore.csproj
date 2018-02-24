@@ -13,16 +13,16 @@
     <RootNamespace>BatchDI.AspNetCore</RootNamespace>
     <Company />
     <Product>Batch Dependency Injection for ASP.NET Core</Product>
-    <Description>This library is used to simplify multiple Dependency Injection.</Description>
+    <Description>This library is used to simplify multiple Dependency Injection in ASP.NET Core.</Description>
     <PackageProjectUrl>https://github.com/DrSensor/BatchDI</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DrSensor/BatchDI.git</RepositoryUrl>
     <PackageTags>ASP.NET;ASP.NETCore;Dependency Injection</PackageTags>
     <Copyright>Fahmi Akbar Wildana</Copyright>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="../../BatchDI.csproj" />
     <Compile Include="IServiceCollectionExtensions.cs" />
     <PackageReference Include="Microsoft.AspNetCore" Version="[2.0,]" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="*" />
-    <ProjectReference Include="../../BatchDI.csproj" />
   </ItemGroup>
 </Project>
