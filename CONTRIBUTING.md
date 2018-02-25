@@ -28,13 +28,16 @@ In general, the folder structure of this project follow:
 ├── Example                         # Contain specific implementation depend on framework to use
 │   └── <Framework of Choice>
 │       └── Example.<Framework of Choice>.csproj
+│
 ├── Framework                       # Contain extension method of specific framework
 │   └── <Framework of Choice>
 │       ├── BatchDI.<Framework of Choice>.csproj
 │       └── <Class/Interface to Extend>Extensions.cs
-├── BatchDI.csproj
-├── BatchDI_API.cs
-└── BatchDI.cs
+│
+└── Library                         # Contain main implementation of BatchDI
+    ├── BatchDI.csproj
+    ├── BatchDI_API.cs
+    └── BatchDI.cs
 ```
 
 Test on new Framework extension heavily depend on smoke testing in Example folder.
@@ -75,7 +78,7 @@ Test on new Framework extension heavily depend on smoke testing in Example folde
     <Copyright>Fahmi Akbar Wildana, [Your Name]</Copyright>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../BatchDI.csproj" />
+    <ProjectReference Include="../../Library/BatchDI.csproj" />
     <Compile Include="<Class/Interface to Extend>Extensions.cs" />
 
     <PackageReference Include="LIBRARY_TO_EXTEND" Version="[MINIMUM_VERSION,]" />

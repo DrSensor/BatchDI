@@ -20,7 +20,7 @@
     <Copyright>Fahmi Akbar Wildana</Copyright>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../BatchDI.csproj" />
+    <ProjectReference Include="../../Library/BatchDI.csproj" />
     <Compile Include="IServiceCollectionExtensions.cs" />
     <PackageReference Include="Microsoft.AspNetCore" Version="[2.0,]" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="*" />

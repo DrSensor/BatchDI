@@ -1,9 +1,12 @@
 # Batch Dependency Injection
 
+![version](https://img.shields.io/nuget/v/BatchDI.svg)
+![download](https://img.shields.io/nuget/dt/BatchDI.svg)
+
 | Status                                                                                                                                                                            | OS          |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | [![Build status](https://ci.appveyor.com/api/projects/status/g5qlityh97xukmv2/branch/master?svg=true)](https://ci.appveyor.com/project/DrSensor/batchdi-aspnetcore/branch/master) | Windows     |
-| [![Build Status](https://travis-ci.org/DrSensor/BatchDI.AspNetCore.svg?branch=master)](https://travis-ci.org/DrSensor/BatchDI.AspNetCore)                                         | Linux, OS X |
+| [![Build Status](https://travis-ci.org/DrSensor/BatchDI.svg?branch=master)](https://travis-ci.org/DrSensor/BatchDI.AspNetCore)                                                    | Linux, OS X |
 
 This package/library use for doing multiple dependency injection in easy way. For more info about DI (Dependency Injection) see [here](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection).
 
@@ -157,8 +160,9 @@ using BatchDI.AspNetCore;
 .
 public void ConfigureServices(IServiceCollection services)
 {
-    service.BatchSingleton("*Service", new[] {"BlacklistOneService", "BlacklistTwoService"});
-    service.BatchTransient("*Type", "BlacklistOneType");
+    service.BatchSingleton("*Service", new[] {"BlacklistOneService", "BlacklistTwoService"})
+           .BatchTransient("*Type", "BlacklistOneType");
+
     service.BatchScoped("*Query");
 
     // For custom dependency injection
@@ -173,30 +177,30 @@ public void ConfigureServices(IServiceCollection services)
 <details>
 <summary><b>Arguments/Parameters</b></summary>
 
-| Parameter              | Description                                                              | Type                                 |
-| ---------------------- | ------------------------------------------------------------------------ | ------------------------------------ |
-| `injector` (lambda)    | implement callback for custom DI                                         | `Action<Type>`, `Action<Type, Type>` |
-| `filter`               | list or glob pattern for specify which class name to inject              | `string`, `string[]`                 |
-| `blacklist` (optional) | list or glob pattern for specify which class name **not** to be injected | `string`, `string[]`                 |
-| `parallel` (optional)  | if the startup time become slower, try to set this `true`                | `bool`                               |
+| Parameter              | Description                                                              | Type                                     |
+| ---------------------- | ------------------------------------------------------------------------ | ---------------------------------------- |
+| `injector` (lambda)    | implement callback for custom DI                                         | `Action<Type>`, <br>`Action<Type, Type>` |
+| `filter`               | list or glob pattern for specify which class name to inject              | `string`, <br>`string[]`                 |
+| `blacklist` (optional) | list or glob pattern for specify which class name **not** to be injected | `string`, <br>`string[]`                 |
+| `parallel` (optional)  | if the startup time become slower, try to set this `true`                | `bool`                                   |
 
 </details>
 
 ### BatchDI
 
-| Method                                                      | Description                                                                 |
-| ----------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `BatchInject(injector =>{}, filter, blacklist?, parallel?)` | implement custom dependency injection based on filter pattern and blacklist |
+| Method                                                      | Description                                                                 | Return |
+| ----------------------------------------------------------- | --------------------------------------------------------------------------- | ------ |
+| `BatchInject(injector =>{}, filter, blacklist?, parallel?)` | implement custom dependency injection based on filter pattern and blacklist |        |
 
 ### BatchDI.AspNetCore
 
 This library extend `IServiceCollection` usage by adding additional method for batch/multiple Dependency Injection in one method call.
 
-| Method                                          | Description                                 |
-| ----------------------------------------------- | ------------------------------------------- |
-| `BatchSingleton(filter, blacklist?, parallel?)` | Batch/MultipleAdd version of `AddSingleton` |
-| `BatchTransient(filter, blacklist?, parallel?)` | Batch/MultipleAdd version of `AddTransient` |
-| `BatchScoped(filter, blacklist?, parallel?)`    | Batch/MultipleAdd version of `AddScoped`    |
+| Method                                          | Description                                 | Return               |
+| ----------------------------------------------- | ------------------------------------------- | -------------------- |
+| `BatchSingleton(filter, blacklist?, parallel?)` | Batch/MultipleAdd version of `AddSingleton` | `IServiceCollection` |
+| `BatchTransient(filter, blacklist?, parallel?)` | Batch/MultipleAdd version of `AddTransient` | `IServiceCollection` |
+| `BatchScoped(filter, blacklist?, parallel?)`    | Batch/MultipleAdd version of `AddScoped`    | `IServiceCollection` |
 
 ---
 
