@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="../../Library/BatchDI.csproj" />
     <Compile Include="IServiceCollectionExtensions.cs" />
+    <Compile Include="IWebHostBuilderExtensions.cs" />
     <PackageReference Include="Microsoft.AspNetCore" Version="[2.0,]" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="*" />
   </ItemGroup>

@@ -8,6 +8,8 @@ namespace BatchDI
 {
     public partial class BatchDI
     {
+        private static Assembly EntryAssembly = Assembly.GetEntryAssembly();
+
         public static bool filterHasInterface(string filter)
         {
             return (!filter.StartsWith("*") && !filter.EndsWith("*")) ||
@@ -17,11 +19,11 @@ namespace BatchDI
         private static void BatchInjector(Delegate injector, string filter, dynamic blacklist, bool parallel)
         {
             // Filter based on namespace and provided pattern
-            var types = from t in Assembly.GetEntryAssembly().GetTypes()
-                        where containMainNamespace(t.Namespace) && filterMatch(t.Name) && notInBlacklist(t.Name)
+            var types = from t in EntryAssembly.GetTypes()
+                        where containMainNamespace(t.Namespace, t) && filterMatch(t.Name) && notInBlacklist(t.Name)
                         select t;
 
-            /** @Implementation */
+            #region Implementation
             if (filterHasInterface(filter))
             {
                 var grouptypes = from t in types
@@ -46,9 +48,9 @@ namespace BatchDI
                 if (parallel) Parallel.ForEach(types, t => invoke(t));
                 else foreach (var t in types) invoke(t);
             }
-            /** @ENDImplementation */
+            #endregion
 
-            /** @Helper */
+            #region Helper
             bool notInBlacklist(string className)
             {
                 if (blacklist is string[])
@@ -76,18 +78,18 @@ namespace BatchDI
                 }
             }
 
-            bool containMainNamespace(string _namespace)
+            bool containMainNamespace(string _namespace, Type t)
             {
                 try
                 {
-                    return _namespace.StartsWith(Assembly.GetEntryAssembly().EntryPoint.DeclaringType.Namespace ?? "");
+                    return _namespace.StartsWith(EntryAssembly.EntryPoint.DeclaringType.Namespace ?? "");
                 }
                 catch (System.NullReferenceException)
                 {
                     return false;
                 }
             }
-            /** @ENDHelper */
+            #endregion
         }
     }
 }

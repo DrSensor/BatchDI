@@ -62,7 +62,7 @@ So then I can write it like this
 
 ## Installation
 
-* .NET CLI
+*   .NET CLI
 
 ```bash
 dotnet add package BatchDI
@@ -70,7 +70,7 @@ dotnet add package BatchDI
 dotnet add package BatchDI.AspNetCore
 ```
 
-* Package Manager
+*   Package Manager
 
 ```powershell
 PM> Install-Package BatchDI
@@ -151,7 +151,7 @@ BatchDI.BatchInject(
 
 This method have same functionality as [ASP.NET Dependency Injection](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection) but without doing repetitive typing.
 
-* In `Startup.cs`
+*   In `Startup.cs`
 
 ```c#
 using Microsoft.Extensions.DependencyInjection;
@@ -169,6 +169,17 @@ public void ConfigureServices(IServiceCollection services)
     service.BatchInject(lambdaFunction, "*Service", new[] {"BlacklistOneService", "BlacklistTwoService"});
 }
 ```
+
+<details>
+<summary>Workaround for fix error in Integration Test.</summary>
+
+Use `SetBatchDIEntryPoint` to set the EntryAssembly
+
+```c#
+_server = new TestServer(new WebHostBuilder().SetBatchDIEntryPoint<Startup>().UseStartup<Startup>());
+```
+
+</details>
 
 ---
 
@@ -190,7 +201,8 @@ public void ConfigureServices(IServiceCollection services)
 
 | Method                                                      | Description                                                                 | Return |
 | ----------------------------------------------------------- | --------------------------------------------------------------------------- | ------ |
-| `BatchInject(injector =>{}, filter, blacklist?, parallel?)` | implement custom dependency injection based on filter pattern and blacklist |        |
+| `BatchInject(injector =>{}, filter, blacklist?, parallel?)` | implement custom dependency injection based on filter pattern and blacklist |
+| `SetEntryAssembly(Assembly assembly)`                       | Try to set this this in case there is an error                              |
 
 ### BatchDI.AspNetCore
 
@@ -208,9 +220,9 @@ This library extend `IServiceCollection` usage by adding additional method for b
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for contributing directly via:
 
-* [Create Issues](./CONTRIBUTING.md/#create-issues)
-* [Pull Requests](./CONTRIBUTING.md/#pull-requests) or
-* [Info about the project structure](./CONTRIBUTING.md/#project-structure)
+*   [Create Issues](./CONTRIBUTING.md/#create-issues)
+*   [Pull Requests](./CONTRIBUTING.md/#pull-requests) or
+*   [Info about the project structure](./CONTRIBUTING.md/#project-structure)
 
 ## License
 

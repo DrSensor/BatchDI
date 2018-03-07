@@ -20,7 +20,7 @@ artifacts:
   - path: '**\*.nupkg'
     name: Package
     type: NuGetPackage
-  - path: bin/Release
+  - path: Release.zip
     name: Release
     type: Zip
 
@@ -38,6 +38,8 @@ before_build:
   - cmd: dotnet restore --verbosity m
 build_script:
   - cmd: dotnet pack
+after_build:
+  - cmd: 7z a Release.zip **\bin\Release
 
 test_script:
   - cmd: cd Example\AspNetCore
