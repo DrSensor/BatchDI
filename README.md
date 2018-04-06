@@ -188,31 +188,32 @@ _server = new TestServer(new WebHostBuilder().SetBatchDIEntryPoint<Startup>().Us
 <details>
 <summary><b>Arguments/Parameters</b></summary>
 
-| Parameter              | Description                                                              | Type                                     |
-| ---------------------- | ------------------------------------------------------------------------ | ---------------------------------------- |
-| `injector` (lambda)    | implement callback for custom DI                                         | `Action<Type>`, <br>`Action<Type, Type>` |
-| `filter`               | list or glob pattern for specify which class name to inject              | `string`, <br>`string[]`                 |
-| `blacklist` (optional) | list or glob pattern for specify which class name **not** to be injected | `string`, <br>`string[]`                 |
-| `parallel` (optional)  | if the startup time become slower, try to set this `true`                | `bool`                                   |
+| Parameter                       | Description                                                              | Type                                     | Default value |
+| ------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------- | ------------- |
+| `injector` (lambda)             | implement callback for custom DI                                         | `Action<Type>`, <br>`Action<Type, Type>` |
+| `filter`                        | list or glob pattern for specify which class name to inject              | `string`, <br>`string[]`                 |
+| `blacklist` (optional)          | list or glob pattern for specify which class name **not** to be injected | `string`, <br>`string[]`                 |
+| `parallel` (optional)           | if the startup time become slower, try to set this `true`                | `bool`                                   | `false`       |
+| `includeNestedClass` (optional) | choose if also to inject nested class                                    | `bool`                                   | `true`        |
 
 </details>
 
 ### BatchDI
 
-| Method                                                      | Description                                                                 | Return |
-| ----------------------------------------------------------- | --------------------------------------------------------------------------- | ------ |
-| `BatchInject(injector =>{}, filter, blacklist?, parallel?)` | implement custom dependency injection based on filter pattern and blacklist |
-| `SetEntryAssembly(Assembly assembly)`                       | Try to set this this in case there is an error                              |
+| Method                                                                           | Description                                                                 | Return |
+| -------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------ |
+| `BatchInject(injector =>{}, filter, blacklist?, parallel?, includeNestedClass?)` | implement custom dependency injection based on filter pattern and blacklist |
+| `SetEntryAssembly(Assembly assembly)`                                            | Try to set this this in case there is an error                              |
 
 ### BatchDI.AspNetCore
 
 This library extend `IServiceCollection` usage by adding additional method for batch/multiple Dependency Injection in one method call.
 
-| Method                                          | Description                                 | Return               |
-| ----------------------------------------------- | ------------------------------------------- | -------------------- |
-| `BatchSingleton(filter, blacklist?, parallel?)` | Batch/MultipleAdd version of `AddSingleton` | `IServiceCollection` |
-| `BatchTransient(filter, blacklist?, parallel?)` | Batch/MultipleAdd version of `AddTransient` | `IServiceCollection` |
-| `BatchScoped(filter, blacklist?, parallel?)`    | Batch/MultipleAdd version of `AddScoped`    | `IServiceCollection` |
+| Method                                                               | Description                                 | Return               |
+| -------------------------------------------------------------------- | ------------------------------------------- | -------------------- |
+| `BatchSingleton(filter, blacklist?, parallel?, includeNestedClass?)` | Batch/MultipleAdd version of `AddSingleton` | `IServiceCollection` |
+| `BatchTransient(filter, blacklist?, parallel?, includeNestedClass?)` | Batch/MultipleAdd version of `AddTransient` | `IServiceCollection` |
+| `BatchScoped(filter, blacklist?, parallel?, includeNestedClass?)`    | Batch/MultipleAdd version of `AddScoped`    | `IServiceCollection` |
 
 ---
 

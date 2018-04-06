@@ -16,7 +16,7 @@ namespace BatchDI
                     (filter.StartsWith("*") && filter.EndsWith("*"));
         }
 
-        private static void BatchInjector(Delegate injector, string filter, dynamic blacklist, bool parallel)
+        private static void BatchInjector(Delegate injector, string filter, dynamic blacklist, bool parallel, bool includeNestedClass)
         {
             // Filter based on namespace and provided pattern
             var types = from t in EntryAssembly.GetTypes()
@@ -37,6 +37,7 @@ namespace BatchDI
                     Type _implementation = group.Where(x => !x.IsInterface && _interface.IsAssignableFrom(x)).First();
                     // _services.AddSingleton(_interface, _implementation);
                     injector.DynamicInvoke(_interface, _implementation);
+                    nestedInvoke(_implementation);
                 }
 
                 if (parallel) Parallel.ForEach(grouptypes, g => invoke(g));
@@ -44,13 +45,33 @@ namespace BatchDI
             }
             else
             {
-                void invoke(Type implementation) { if (!implementation.IsInterface) injector.DynamicInvoke(implementation); }
+                void invoke(Type implementation)
+                {
+                    if (!implementation.IsInterface)
+                    {
+                        injector.DynamicInvoke(implementation);
+                        nestedInvoke(implementation);
+                    }
+                }
                 if (parallel) Parallel.ForEach(types, t => invoke(t));
                 else foreach (var t in types) invoke(t);
             }
             #endregion
 
             #region Helper
+            void nestedInvoke(Type i) // WARN: recursive function
+            {
+                if (i.GetNestedTypes().Length < 1 && !includeNestedClass) return; // stop if empty
+                void invoke(Type g)
+                {
+                    injector.DynamicInvoke(g);
+                    nestedInvoke(g);
+                }
+
+                if (parallel) Parallel.ForEach(i.GetNestedTypes(), g => invoke(g));
+                else foreach (var g in i.GetNestedTypes()) invoke(g);
+            }
+
             bool notInBlacklist(string className)
             {
                 if (blacklist is string[])

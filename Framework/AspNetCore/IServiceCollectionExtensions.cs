@@ -7,60 +7,70 @@ namespace BatchDI.AspNetCore
 
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection BatchInject(this IServiceCollection services, Action<Type, Type> injector, dynamic filter, dynamic blacklist = null, bool parallel = false)
+        public static IServiceCollection BatchInject(
+            this IServiceCollection services, Action<Type, Type> injector, dynamic filter,
+            dynamic blacklist = null, bool parallel = false, bool includeNestedClass = true)
         {
-            BatchDI.BatchInject(injector, filter, blacklist, parallel);
+            BatchDI.BatchInject(injector, filter, blacklist, parallel, includeNestedClass);
             return services;
         }
 
-        public static IServiceCollection BatchInject(this IServiceCollection services, Action<Type> injector, dynamic filter, dynamic blacklist = null, bool parallel = false)
+        public static IServiceCollection BatchInject(
+            this IServiceCollection services, Action<Type> injector, dynamic filter,
+            dynamic blacklist = null, bool parallel = false, bool includeNestedClass = true)
         {
-            BatchDI.BatchInject(injector, filter, blacklist, parallel);
+            BatchDI.BatchInject(injector, filter, blacklist, parallel, includeNestedClass);
             return services;
         }
 
-        public static IServiceCollection BatchSingleton(this IServiceCollection services, dynamic filter, dynamic blacklist = null, bool parallel = false)
+        public static IServiceCollection BatchSingleton(
+            this IServiceCollection services, dynamic filter,
+            dynamic blacklist = null, bool parallel = false, bool includeNestedClass = true)
         {
 
             if (BatchDI.filterHasInterface(filter))
             {
                 Action<Type, Type> caller = (_interface, _implementation) => services.AddSingleton(_interface, _implementation);
-                BatchDI.BatchInject(caller, filter, blacklist, parallel);
+                BatchDI.BatchInject(caller, filter, blacklist, parallel, includeNestedClass);
             }
             else
             {
                 Action<Type> caller = (_implementation) => services.AddSingleton(_implementation);
-                BatchDI.BatchInject(caller, filter, blacklist, parallel);
+                BatchDI.BatchInject(caller, filter, blacklist, parallel, includeNestedClass);
             }
             return services;
         }
 
-        public static IServiceCollection BatchTransient(this IServiceCollection services, string filter, dynamic blacklist = null, bool parallel = false)
+        public static IServiceCollection BatchTransient(
+            this IServiceCollection services, string filter,
+            dynamic blacklist = null, bool parallel = false, bool includeNestedClass = true)
         {
             if (BatchDI.filterHasInterface(filter))
             {
                 Action<Type, Type> caller = (_interface, _implementation) => services.AddTransient(_interface, _implementation);
-                BatchDI.BatchInject(caller, filter, blacklist, parallel);
+                BatchDI.BatchInject(caller, filter, blacklist, parallel, includeNestedClass);
             }
             else
             {
                 Action<Type> caller = (_implementation) => services.AddTransient(_implementation);
-                BatchDI.BatchInject(caller, filter, blacklist, parallel);
+                BatchDI.BatchInject(caller, filter, blacklist, parallel, includeNestedClass);
             }
             return services;
         }
 
-        public static IServiceCollection BatchScoped(this IServiceCollection services, string filter, dynamic blacklist = null, bool parallel = false)
+        public static IServiceCollection BatchScoped(
+            this IServiceCollection services, string filter,
+            dynamic blacklist = null, bool parallel = false, bool includeNestedClass = true)
         {
             if (BatchDI.filterHasInterface(filter))
             {
                 Action<Type, Type> caller = (_interface, _implementation) => services.AddScoped(_interface, _implementation);
-                BatchDI.BatchInject(caller, filter, blacklist, parallel);
+                BatchDI.BatchInject(caller, filter, blacklist, parallel, includeNestedClass);
             }
             else
             {
                 Action<Type> caller = (_implementation) => services.AddScoped(_implementation);
-                BatchDI.BatchInject(caller, filter, blacklist, parallel);
+                BatchDI.BatchInject(caller, filter, blacklist, parallel, includeNestedClass);
             }
             return services;
         }
