@@ -196,7 +196,7 @@ _server = new TestServer(new WebHostBuilder().SetBatchDIEntryPoint<Startup>().Us
 | `filter`                        | list or glob pattern for specify which class name to inject              | `string`, <br>`string[]`                 |
 | `blacklist` (optional)          | list or glob pattern for specify which class name **not** to be injected | `string`, <br>`string[]`                 |
 | `parallel` (optional)           | if the startup time become slower, try to set this `true`                | `bool`                                   | `false`       |
-| `includeNestedClass` (optional) | choose if also to inject nested class                                    | `bool`                                   | `true`        |
+| `nested` (optional) | choose if also to inject nested class                                    | `bool`                                   | `true`        |
 
 </details>
 
@@ -204,7 +204,7 @@ _server = new TestServer(new WebHostBuilder().SetBatchDIEntryPoint<Startup>().Us
 
 | Method                                                                           | Description                                                                 | Return |
 | -------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ------ |
-| `BatchInject(injector =>{}, filter, blacklist?, parallel?, includeNestedClass?)` | implement custom dependency injection based on filter pattern and blacklist |
+| `BatchInject(injector =>{}, filter, blacklist?, parallel?, nested?)` | implement custom dependency injection based on filter pattern and blacklist |
 | `SetEntryAssembly(Assembly assembly)`                                            | Try to set this this in case there is an error                              |
 
 ### BatchDI.AspNetCore
@@ -213,9 +213,9 @@ This library extend `IServiceCollection` usage by adding additional method for b
 
 | Method                                                               | Description                                 | Return               |
 | -------------------------------------------------------------------- | ------------------------------------------- | -------------------- |
-| `BatchSingleton(filter, blacklist?, parallel?, includeNestedClass?)` | Batch/MultipleAdd version of `AddSingleton` | `IServiceCollection` |
-| `BatchTransient(filter, blacklist?, parallel?, includeNestedClass?)` | Batch/MultipleAdd version of `AddTransient` | `IServiceCollection` |
-| `BatchScoped(filter, blacklist?, parallel?, includeNestedClass?)`    | Batch/MultipleAdd version of `AddScoped`    | `IServiceCollection` |
+| `BatchSingleton(filter, blacklist?, parallel?, nested?)` | Batch/MultipleAdd version of `AddSingleton` | `IServiceCollection` |
+| `BatchTransient(filter, blacklist?, parallel?, nested?)` | Batch/MultipleAdd version of `AddTransient` | `IServiceCollection` |
+| `BatchScoped(filter, blacklist?, parallel?, nested?)`    | Batch/MultipleAdd version of `AddScoped`    | `IServiceCollection` |
 
 ---
 
