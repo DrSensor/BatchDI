@@ -2,7 +2,7 @@ using System;
 
 namespace Example.Services
 {
-    public class ScopedExService
+    public class TransientService : ITransientService
     {
         private int counter = 0;
         public int count
@@ -13,7 +13,7 @@ namespace Example.Services
             }
         }
 
-        ScopedExService()
+        TransientService()
         {
             counter += 1;
         }

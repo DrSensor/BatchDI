@@ -2,7 +2,7 @@ using System;
 
 namespace Example.Services
 {
-    public class SingletonService
+    public class SingletonExService
     {
         private int counter = 0;
         public int count
@@ -13,7 +13,7 @@ namespace Example.Services
             }
         }
 
-        SingletonService()
+        SingletonExService()
         {
             counter += 1;
         }
