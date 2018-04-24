@@ -11,6 +11,8 @@ using McMaster.Extensions.CommandLineUtils;
 
 namespace Example
 {
+    using Services;
+
     public class Program
     {
         public static int Main(string[] args)

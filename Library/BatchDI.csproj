@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup>
     <Version />
@@ -11,17 +10,16 @@
   <PropertyGroup>
     <AssemblyName>BatchDI</AssemblyName>
     <RootNamespace>BatchDI</RootNamespace>
-    <Company />
     <Product>Batch Dependency Injection</Product>
     <Description>This library is used to simplify multiple Dependency Injection.</Description>
     <PackageProjectUrl>https://github.com/DrSensor/BatchDI</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DrSensor/BatchDI.git</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/DrSensor/BatchDI/master/icon.svg</PackageIconUrl>
     <PackageTags>Dependency Injection</PackageTags>
     <Copyright>Fahmi Akbar Wildana</Copyright>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/DrSensor/BatchDI/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BatchDI.cs" />
-    <Compile Include="BatchDI_API.cs" />
     <PackageReference Include="Microsoft.CSharp" Version="*" />
   </ItemGroup>
 </Project>

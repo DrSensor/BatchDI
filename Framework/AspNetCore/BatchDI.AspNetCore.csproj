@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup>
     <Version />
@@ -11,18 +10,17 @@
   <PropertyGroup>
     <AssemblyName>BatchDI.AspNetCore</AssemblyName>
     <RootNamespace>BatchDI.AspNetCore</RootNamespace>
-    <Company />
     <Product>Batch Dependency Injection for ASP.NET Core</Product>
     <Description>This library is used to simplify multiple Dependency Injection in ASP.NET Core.</Description>
     <PackageProjectUrl>https://github.com/DrSensor/BatchDI</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DrSensor/BatchDI.git</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/DrSensor/BatchDI/master/icon.svg</PackageIconUrl>
     <PackageTags>ASP.NET;ASP.NETCore;Dependency Injection</PackageTags>
     <Copyright>Fahmi Akbar Wildana</Copyright>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/DrSensor/BatchDI/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Library/BatchDI.csproj" />
-    <Compile Include="IServiceCollectionExtensions.cs" />
-    <Compile Include="IWebHostBuilderExtensions.cs" />
     <PackageReference Include="Microsoft.AspNetCore" Version="[2.0,]" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="*" />
   </ItemGroup>

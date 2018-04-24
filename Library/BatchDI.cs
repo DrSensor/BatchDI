@@ -19,7 +19,8 @@ namespace BatchDI
         private static void BatchInjector(Delegate injector, string filter, dynamic blacklist, bool parallel, bool includeNestedClass)
         {
             // Filter based on namespace and provided pattern
-            var types = from t in EntryAssembly.GetTypes()
+            var types = from a in EntryAssembly.GetReferencedAssemblies().Select(Assembly.Load)
+                        from t in a.GetTypes()
                         where containMainNamespace(t.Namespace, t) && filterMatch(t.Name) && notInBlacklist(t.Name)
                         select t;
 

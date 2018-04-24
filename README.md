@@ -8,6 +8,8 @@
 | [![Build status](https://ci.appveyor.com/api/projects/status/g5qlityh97xukmv2/branch/master?svg=true)](https://ci.appveyor.com/project/DrSensor/batchdi-aspnetcore/branch/master) | Windows     |
 | [![Build Status](https://travis-ci.org/DrSensor/BatchDI.svg?branch=master)](https://travis-ci.org/DrSensor/BatchDI.AspNetCore)                                                    | Linux, OS X |
 
+<img align="right" src="./icon.svg" width="150" height="150" />
+
 This package/library use for doing multiple dependency injection in easy way. For more info about DI (Dependency Injection) see [here](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection).
 
 <details>

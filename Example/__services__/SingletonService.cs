@@ -1,3 +1,5 @@
+using System;
+
 namespace Example.Services
 {
     public class SingletonService
@@ -7,8 +9,13 @@ namespace Example.Services
         {
             get
             {
-                return ++counter;
+                return counter;
             }
+        }
+
+        SingletonService()
+        {
+            counter += 1;
         }
     }
 }
