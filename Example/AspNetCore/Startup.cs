@@ -27,8 +27,8 @@ namespace Example
         public void ConfigureServices(IServiceCollection services)
         {
             services.BatchSingleton("Singleton*");
-            services.BatchTransient("ITransient*Service");
-            services.BatchScoped("Scoped*");
+            // services.BatchTransient("ITransient*Service");
+            // services.BatchScoped("Scoped*");
             services.AddMvc();
         }
 

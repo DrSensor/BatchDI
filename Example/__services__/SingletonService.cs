@@ -13,7 +13,7 @@ namespace Example.Services
             }
         }
 
-        SingletonExService()
+        public SingletonExService()
         {
             counter += 1;
         }

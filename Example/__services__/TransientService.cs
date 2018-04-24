@@ -13,7 +13,7 @@ namespace Example.Services
             }
         }
 
-        TransientExService()
+        public TransientExService()
         {
             counter += 1;
         }

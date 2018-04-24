@@ -13,7 +13,7 @@ namespace Example.Services
             }
         }
 
-        ScopedExService()
+        public ScopedExService()
         {
             counter += 1;
         }
