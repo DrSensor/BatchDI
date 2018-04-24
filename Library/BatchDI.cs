@@ -16,7 +16,7 @@ namespace BatchDI
                     (filter.StartsWith("*") && filter.EndsWith("*"));
         }
 
-        private static void BatchInjector(Delegate injector, string filter, dynamic blacklist, bool parallel, bool includeNestedClass)
+        private static void BatchInjector(Delegate injector, string filter, dynamic blacklist, bool parallel, bool nested)
         {
             // Filter based on namespace and provided pattern
             var types = from a in EntryAssembly.GetReferencedAssemblies().Select(Assembly.Load)
@@ -62,7 +62,7 @@ namespace BatchDI
             #region Helper
             void nestedInvoke(Type i) // WARN: recursive function
             {
-                if (i.GetNestedTypes().Length < 1 && !includeNestedClass) return; // stop if empty
+                if (i.GetNestedTypes().Length < 1 && !nested) return; // stop if empty
                 void invoke(Type g)
                 {
                     injector.DynamicInvoke(g);
