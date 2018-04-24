@@ -14,7 +14,7 @@
     <Description>This library is used to simplify multiple Dependency Injection.</Description>
     <PackageProjectUrl>https://github.com/DrSensor/BatchDI</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DrSensor/BatchDI.git</RepositoryUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/DrSensor/BatchDI/master/icon.svg</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/DrSensor/BatchDI/master/icon.png</PackageIconUrl>
     <PackageTags>Dependency Injection</PackageTags>
     <Copyright>Fahmi Akbar Wildana</Copyright>
     <PackageLicenseUrl>https://raw.githubusercontent.com/DrSensor/BatchDI/master/LICENSE</PackageLicenseUrl>
